@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Shop{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <span class="eyebrow"><span class="eyebrow-dot"></span> THE EVERYDAY EDIT</span>
+    <h1>Find your next<br><span>favourite thing.</span></h1>
+    <p>Useful essentials, thoughtful picks, and everyday style — all in one place.</p>
+    <a class="btn btn-light" href="#products">Explore products <span>↘</span></a>
+    <div class="hero-note"><span class="note-check">✓</span> Easy shopping <span class="note-divider">·</span> Cash on Delivery</div>
+  </div>
+  <div class="hero-art">
+    <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
+    <div class="hero-sticker sticker-top">YOUR DAILY<br>UPGRADE ✳</div>
+    <div class="hero-product"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=85" alt="Wireless headphones"></div>
+    <div class="hero-sticker sticker-bottom"><strong>Little things.</strong><br>Big difference.</div>
+  </div>
+</section>
+<section class="trust-row">
+  <div><span class="trust-icon">◇</span><span><strong>Curated finds</strong><small>Everyday essentials</small></span></div>
+  <div><span class="trust-icon">↗</span><span><strong>Simple checkout</strong><small>Easy ordering</small></span></div>
+  <div><span class="trust-icon">♡</span><span><strong>Made for you</strong><small>Shop your way</small></span></div>
+</section>
+<section id="products" class="products-section">
+  <div class="section-heading"><div><span class="eyebrow">THE COLLECTION</span><h2>Shop the good stuff.</h2><p>Small upgrades for your everyday.</p></div><span class="result-count">{{ products|length }} products</span></div>
+  <div class="category-row">
+    <a class="category-chip {% if not selected_category %}active{% endif %}" href="{{ url_for('index', q=search) }}">All items</a>
+    {% for category in categories %}
+      <a class="category-chip {% if selected_category == category %}active{% endif %}" href="{{ url_for('index', category=category, q=search) }}">{{ category }}</a>
+    {% endfor %}
+  </div>
+  {% if products %}
+  <div class="product-grid">
+    {% for product in products %}
+    <article class="product-card">
+      <a class="product-image" href="{{ url_for('product_detail', product_id=product.id) }}">
+        {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">{% else %}<div class="image-placeholder">✳</div>{% endif %}
+        <span class="product-tag">{{ product.category }}</span>
+      </a>
+      <div class="product-info">
+        <a class="product-name" href="{{ url_for('product_detail', product_id=product.id) }}">{{ product.name }}</a>
+        <p class="product-description">{{ product.description|truncate(76) }}</p>
+        <div class="product-bottom"><strong class="price">₹{{ '%.2f'|format(product.price) }}</strong>
+          {% if product.stock > 0 %}
+          <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post"><input type="hidden" name="quantity" value="1"><button class="add-button" type="submit" aria-label="Add {{ product.name }} to cart">+</button></form>
+          {% else %}<span class="out-stock">Sold out</span>{% endif %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="empty-state"><span>⌕</span><h3>No products found</h3><p>Try another search or category.</p><a class="btn btn-primary" href="{{ url_for('index') }}">Show all products</a></div>
+  {% endif %}
+</section>
+<section class="bottom-banner"><div><span class="eyebrow">A BETTER EVERYDAY</span><h2>Good things are<br>just a click away.</h2></div><a class="btn btn-dark" href="#products">Find your thing <span>→</span></a><span class="banner-spark">✳</span></section>
+{% endblock %}

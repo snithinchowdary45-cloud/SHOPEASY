@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ShopEase{% endblock %} | ShopEase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="nav-wrap">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">S</span> ShopEase</a>
+    <form class="nav-search" action="{{ url_for('index') }}" method="get">
+      <span>⌕</span><input name="q" value="{{ request.args.get('q','') }}" placeholder="Search products..." aria-label="Search products">
+      <button type="submit">Search</button>
+    </form>
+    <nav class="nav-links">
+      <a href="{{ url_for('index') }}">Shop</a>
+      <a href="{{ url_for('cart') }}">Cart <span class="cart-count">{{ cart_count }}</span></a>
+      {% if current_user %}
+        <a href="{{ url_for('orders') }}">My orders</a>
+        {% if current_user.is_admin %}<a href="{{ url_for('admin') }}">Admin</a>{% endif %}
+        <a class="nav-account" href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a class="nav-account" href="{{ url_for('register') }}">Sign up</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+<main class="page-shell">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}<button type="button" class="flash-close" aria-label="Dismiss">×</button></div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="site-footer"><div><a class="brand footer-brand" href="{{ url_for('index') }}"><span class="brand-mark">S</span> ShopEase</a><p>Good finds. Everyday prices.</p></div><span>Student full-stack project · Cash on Delivery demo</span></footer>
+</body>
+</html>

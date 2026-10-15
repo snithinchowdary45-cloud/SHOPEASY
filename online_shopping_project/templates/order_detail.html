@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">ORDER CONFIRMATION</span><h1>Thanks for your order!</h1><p>Order #{{ order.id }} has been placed. This is your order summary.</p></div>
+<div class="order-detail-layout"><section class="form-card"><div class="order-detail-title"><h2>Items ordered</h2><span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span></div>{% for item in order.items %}<div class="order-line"><div><strong>{{ item.product_name }}</strong><p>Qty {{ item.quantity }} × ₹{{ '%.2f'|format(item.price) }}</p></div><strong>₹{{ '%.2f'|format(item.price * item.quantity) }}</strong></div>{% endfor %}<div class="summary-total"><span>Total</span><strong>₹{{ '%.2f'|format(order.total) }}</strong></div></section><aside class="summary-card"><span class="eyebrow">DELIVERY DETAILS</span><h2>Sending it to.</h2><p><strong>{{ order.customer_name }}</strong></p><p>{{ order.address }}</p><p>{{ order.phone }}</p><div class="payment-method"><span class="payment-icon">₹</span><div><strong>Cash on Delivery</strong><p>Pay on arrival.</p></div></div><a class="btn btn-primary btn-full" href="{{ url_for('orders') }}">View all orders</a></aside></div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}My orders{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">YOUR SHOPPING HISTORY</span><h1>My orders.</h1><p>All your purchases, in one place.</p></div>
+{% if orders %}<div class="orders-list">{% for order in orders %}<a class="order-card" href="{{ url_for('order_detail', order_id=order.id) }}"><div><span class="eyebrow">ORDER #{{ order.id }}</span><h3>{{ order.created_at.strftime('%d %b %Y, %I:%M %p') }}</h3><p>{{ order.items|length }} item type(s) · Cash on Delivery</p></div><div class="order-right"><span class="status-pill status-{{ order.status|lower }}">{{ order.status }}</span><strong>₹{{ '%.2f'|format(order.total) }}</strong><span class="order-arrow">→</span></div></a>{% endfor %}</div>{% else %}<div class="empty-state"><span>▤</span><h3>No orders yet.</h3><p>Your future purchases will appear here.</p><a class="btn btn-primary" href="{{ url_for('index') }}">Start shopping</a></div>{% endif %}
+{% endblock %}

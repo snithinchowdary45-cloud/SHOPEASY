@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Your cart{% endblock %}
+{% block content %}
+<div class="page-heading"><span class="eyebrow">YOUR PICKS</span><h1>Your shopping cart.</h1><p>Take one last look before checkout.</p></div>
+{% if rows %}
+<div class="cart-layout"><section class="cart-items">
+{% for row in rows %}
+<article class="cart-item"><a class="cart-thumb" href="{{ url_for('product_detail', product_id=row.product.id) }}">{% if row.product.image_url %}<img src="{{ row.product.image_url }}" alt="{{ row.product.name }}">{% else %}✳{% endif %}</a><div class="cart-item-info"><a href="{{ url_for('product_detail', product_id=row.product.id) }}" class="product-name">{{ row.product.name }}</a><p>{{ row.product.category }}</p><strong>₹{{ '%.2f'|format(row.product.price) }}</strong><form class="quantity-form" action="{{ url_for('update_cart', product_id=row.product.id) }}" method="post"><label>Qty <input type="number" name="quantity" min="0" max="{{ row.product.stock }}" value="{{ row.quantity }}"></label><button class="text-button" type="submit">Update</button></form></div><div class="cart-item-end"><strong>₹{{ '%.2f'|format(row.subtotal) }}</strong><form method="post" action="{{ url_for('remove_from_cart', product_id=row.product.id) }}"><button class="remove-button" type="submit">Remove ×</button></form></div></article>
+{% endfor %}
+<a class="continue-link" href="{{ url_for('index') }}">← Continue shopping</a></section>
+<aside class="summary-card"><span class="eyebrow">ORDER SUMMARY</span><h2>Almost yours.</h2><div class="summary-line"><span>Subtotal</span><strong>₹{{ '%.2f'|format(total) }}</strong></div><div class="summary-line"><span>Delivery</span><strong class="free-text">Free</strong></div><div class="summary-total"><span>Total</span><strong>₹{{ '%.2f'|format(total) }}</strong></div><a class="btn btn-primary btn-full" href="{{ url_for('checkout') }}">Continue to checkout <span>→</span></a><p class="secure-note">✓ Cash on Delivery available</p></aside></div>
+{% else %}<div class="empty-state"><span>♡</span><h3>Your cart is taking a break.</h3><p>Add something you love and it will show up here.</p><a class="btn btn-primary" href="{{ url_for('index') }}">Explore products <span>→</span></a></div>{% endif %}
+{% endblock %}
